@@ -1,0 +1,100 @@
+body{
+    margin:0;
+    background-color: #273143;
+    max-height:100%;
+    max-width:100%;
+}
+
+.logo-a{
+    text-decoration:none;
+    color:white;
+    font-size:40px; 
+    z-index: 1;
+}
+
+.navbar{
+    margin: 50px;
+}
+.navbar-left{
+    display: flex;
+    justify-content:right;
+}
+.navbar-left #active{
+    background-color: rgb(83, 168, 168);
+    color:white;
+    width:40px;
+    height:20px;
+    border-radius: 10px;
+}
+.navbar-left a{
+    margin-top:-80px;
+    text-decoration: none;
+    color:white;
+    padding:20px;
+    font-size:20px;
+}
+.navbar-left a:hover{
+    letter-spacing: 1px;
+}
+.container-box{
+    width:100%;
+    height:100%;
+    background-color: #293D56;
+    margin-top: -30px;
+    border-radius:30px;
+    overflow:scroll;
+    scroll-behavior: smooth;
+}
+.container-box .search{
+    width:50%;
+    height:50px;
+    border-radius: 20px;
+    margin-top:10px;
+    margin-left:25%;
+}
+.container-box button{
+    width:90px;
+    height:30px;
+    color:white;
+    background-color: rgb(99, 211, 66);
+    border: 1px solid black;
+}
+.container-box button:hover{
+    background-color:rgb(72, 153, 48);
+    letter-spacing: 1px;
+}
+.container-box .to-do{
+    color:white;
+    margin-top:50px;
+    margin-left:20%;
+}
+.container-box .to-do input{
+    width:60%;
+    height:50px;
+    border:none;
+    border-radius:10px;
+    margin-top:50px;
+    margin-left:50px;
+}
+.container-box .to-do a{
+    padding:10px;
+    background-color:rgb(99, 211, 66);
+    border-radius:10px;
+    margin-left:20px;
+    text-decoration :none;
+    color:white;
+}
+.container-box .to-do a:hover{
+    background-color: rgb(72, 153, 48);
+    letter-spacing: 1px;
+}
+#float-text{
+    color:white;
+    font-size: 20px;
+    background-color: rgb(99, 211, 66);
+    padding:20px;
+    height:10px;
+    margin-top:0px;
+    text-align: center;
+    visibility: hidden;
+}
