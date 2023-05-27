@@ -1,1 +1,157 @@
+<html>
 
+<head>
+    <title>To-do List</title>
+    <link rel="stylesheet" href="sample.css">
+
+</head>
+
+<body onload="myFunction()">
+    <div class="navbar">
+        <h1 class="logo-a">Naks</h1>
+        <div class="navbar-left">
+            <a href="" id="active">Home</a>
+        </div>
+    </div>
+
+    <div class="container-box">
+        <p id="float-text">frty</p>
+        <input type="text" class="search" id="search" placeholder="search, what you want?" onkeyup="search()">
+        <div class="to-do">
+            <h1>Create your todo list soon.</h1>
+            <input type="text" id="textget" placeholder="Type something here.." />
+            <a href="#" onclick="mycreate()">Create</a>
+            <div id="comment"></div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var count=0;
+    
+    var db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+    db.transaction(function (tx) {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS todo (id, comment)');
+    });
+
+
+    var elem = document.getElementById("textget")
+    elem.onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            mycreate();
+        }
+    }
+    function enterupdate(e, val) {
+        if (e.keyCode == 13) {
+            myupdate(val);
+        }
+
+    }
+
+
+    function search() {
+        let input = document.getElementById('search').value;
+        var len=0;
+        input = input.toLowerCase();
+        db.transaction(function (tx) {
+            tx.executeSql('SELECT * FROM todo', [], function (tx, results) {
+                len=results.rows.length;
+                if (input != "") {
+                    for (let i = 0; i < len; i++) {
+                        if (results.rows[i].comment.toLowerCase().includes(input)) {
+                        }
+                        else {
+                            document.getElementById("inp" + results.rows[i].id).style.display = "none";
+                            document.getElementById("up" + results.rows[i].id).style.display = "none";
+                            document.getElementById("del" + results.rows[i].id).style.display = "none";
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < len; i++) {
+                        document.getElementById("inp" + results.rows[i].id).style.display = "inline-flex";
+                        document.getElementById("up" + results.rows[i].id).style.display = "inline-flex";
+                        document.getElementById("del" + results.rows[i].id).style.display = "inline-flex";
+
+                    }
+                }
+            })
+        });
+    }
+
+
+
+    function myFunction() {
+        // for (let i = 0; i < arr.length; i++) {
+        //     document.getElementById("comment").innerHTML += '<input id="inp' + arr[i]["id"] + '" type="text" placeholder="Type something here........." value="' + arr[i]["name"] + '" onkeyup="enterupdate(event,'+arr[i]["id"]+')"/><a href="#" id="up' + arr[i]["id"] + '" class="update" onclick="myupdate(' + arr[i]["id"] + ')">update</a><a href="#" id="del' + arr[i]["id"] + '" onclick="mydelete(' + arr[i]["id"] + ')">Delete</a>';
+        // }
+        db.transaction(function (tx) {
+            tx.executeSql('SELECT * FROM todo', [], function (tx, results) {
+                var len=results.rows.length;
+                for (i = 0; i < len; i++) {
+                    document.getElementById("comment").innerHTML += '<input id="inp' + results.rows[i].id + '" type="text" placeholder="Type something here........." value="' + results.rows[i].comment + '" onkeyup="enterupdate(event,' + results.rows[i].id + ')"/><a href="#" id="up' + results.rows[i].id + '" class="update" onclick="myupdate(' + results.rows[i].id + ')">update</a><a href="#" id="del' + results.rows[i].id + '" onclick="mydelete(' + results.rows[i].id + ')">Delete</a>';
+                    count=count+1;
+                }
+            }, null);
+        });
+    }
+
+    function mycreate() {
+        const a = document.querySelector('#textget').value;
+        if (a != "") {
+            //document.getElementById("comment").innerHTML += '<input id="inp' + ind + '" type="text" placeholder="Type something here........." value="' + a + '" onkeyup="enterupdate(event,' + (ind) + ')"/><a href="#" class="update" id="up' + (ind) + '" onclick="myupdate(' + (ind) + ')">update</a><a href="#" id="del' + ind + '" onclick="mydelete(' + ind + ')">Delete</a>';
+            db.transaction(function (tx) {
+                tx.executeSql("insert into todo(comment) values (?)", [a]);
+            });
+            db.transaction(function (tx) {
+                tx.executeSql('SELECT * FROM todo', [], function (tx, results) {
+                document.getElementById("comment").innerHTML += '<input id="inp' + results.rows[count].id + '" type="text" placeholder="Type something here........." value="' + results.rows[count].comment + '" onkeyup="enterupdate(event,' + results.rows[count].id + ')"/><a href="#" id="up' + results.rows[count].id + '" class="update" onclick="myupdate(' + results.rows[count].id + ')">update</a><a href="#" id="del' + results.rows[count].id + '" onclick="mydelete(' + results.rows[count].id + ')">Delete</a>';
+                count=count+1;
+            }, null);
+            });
+            document.querySelector('#textget').value = "";
+            document.getElementById("float-text").innerHTML = "Successfully created!";
+            document.getElementById("float-text").style.visibility = "visible";
+        }
+        setTimeout(function () {
+            document.getElementById("float-text").style.visibility = "hidden";
+        }, 3000);
+
+    }
+    function myupdate(val) {
+        var up = document.getElementById("inp" + val).value;
+        // for (let i = 0; i < arr.length; i++) {
+        //     if (val == i) {
+        db.transaction(function (tx) {
+            tx.executeSql("update todo set comment='"+up+"' where id="+ val);
+        });
+                //arr[val].name = up;
+        document.getElementById("float-text").innerHTML = "Successfully updated!";
+        document.getElementById("float-text").style.visibility = "visible";
+            
+        
+        setTimeout(function () {
+            document.getElementById("float-text").style.visibility = "hidden";
+        }, 3000);
+
+    }
+
+
+
+    function mydelete(val) {
+        document.getElementById("inp" + val).remove();
+        document.getElementById("up" + val).remove();
+        document.getElementById("del" + val).remove();
+        db.transaction(function (tx) {
+            tx.executeSql("delete from todo where id="+val);
+        });
+        document.getElementById("float-text").innerHTML = "Successfully deleted!";
+        document.getElementById("float-text").style.visibility = "visible";
+        setTimeout(function () {
+            document.getElementById("float-text").style.visibility = "hidden";
+        }, 3000);
+    }
+
+
+</script>
+
+</html>
